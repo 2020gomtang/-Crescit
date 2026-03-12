@@ -1,7 +1,0 @@
-## 로컬세팅 방법
-1) Backend/.env.example 을 복사해서 Backend/.env 생성
-2) Backend/.env에서 DATABASE_URL 의 비밀번호를 YOUR_PASSWORD 자리에 설정
-3) 터미널에서 Backend 폴더에들어간 후 아래 명령어들 실행하여 테이블 확인
-  - npm i
-  - npx prisma migrate dev
-  - npx prisma studio

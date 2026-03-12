@@ -1,13 +1,22 @@
-node_modules
+# Python
+venv/
+__pycache__/
+*.py[cod]
 
-# env (do not commit secrets)
+# Django / local env
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# allow example file
+# keep example env
 !.env.example
 
-/generated/prisma
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+node_modules/
+db.sqlite3
