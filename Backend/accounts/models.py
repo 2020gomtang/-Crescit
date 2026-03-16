@@ -4,7 +4,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
+from django.db.models import Q
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -37,6 +37,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+   
     username = None
 
     email = models.EmailField(unique=True)
@@ -58,6 +59,10 @@ class User(AbstractUser):
     is_suspended = models.BooleanField(default=False)
     suspended_until = models.DateTimeField(blank=True, null=True)
 
+    is_warning_active = models.BooleanField(default=False)
+    successful_streak_count = models.PositiveIntegerField(default=0)
+    last_score_updated_at = models.DateTimeField(blank=True, null=True)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -65,6 +70,21 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ["nickname"]
 
     objects = UserManager()
+    class Meta(AbstractUser.Meta):
+        constraints = [
+        models.CheckConstraint(
+            condition=Q(trust_score__gte=0.0) & Q(trust_score__lte=99.9),
+            name="accounts_user_trust_score_range",
+        ),
+        models.CheckConstraint(
+            condition=Q(penalty_points__gte=0),
+            name="accounts_user_penalty_points_nonnegative",
+        ),
+        models.CheckConstraint(
+            condition=Q(successful_streak_count__gte=0),
+            name="accounts_user_successful_streak_nonnegative",
+        ),
+    ]
 
     def __str__(self):
         return self.email

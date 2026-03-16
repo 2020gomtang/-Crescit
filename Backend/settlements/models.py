@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Q
 
 from trips.models import Trip
 
@@ -44,6 +45,14 @@ class Receipt(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="PENDING")
     confirmed_at = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(total_amount__gte=0),
+                name="settlements_receipt_total_amount_nonnegative",
+            ),
+        ]
 
     def __str__(self):
         return f"Receipt for Trip {self.trip_id}"
@@ -93,7 +102,11 @@ class Settlement(models.Model):
             models.UniqueConstraint(
                 fields=["receipt", "payer_user"],
                 name="unique_receipt_payer_settlement",
-            )
+            ),
+            models.CheckConstraint(
+                condition=Q(share_amount__gte=0),
+                name="settlements_settlement_share_amount_nonnegative",
+            ),
         ]
 
     def __str__(self):

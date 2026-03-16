@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Review, Penalty, Report
+from .models import Review, Penalty, Report, TrustScoreLog
 
 
 @admin.register(Review)
@@ -51,3 +51,19 @@ class ReportAdmin(admin.ModelAdmin):
         "reported_user__email",
         "reason",
     )
+    
+@admin.register(TrustScoreLog)
+class TrustScoreLogAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "user",
+        "event_type",
+        "direction",
+        "raw_base_score",
+        "applied_delta",
+        "score_before",
+        "score_after",
+        "created_at",
+    )
+    list_filter = ("event_type", "direction", "is_warning_triggered")
+    search_fields = ("user__email", "user__nickname", "reason_detail")

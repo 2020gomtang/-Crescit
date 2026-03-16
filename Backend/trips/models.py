@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import Q
 
 
 class Trip(models.Model):
@@ -39,6 +40,35 @@ class Trip(models.Model):
     estimated_fare = models.IntegerField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(capacity__gte=2) & Q(capacity__lte=4),
+                name="trips_trip_capacity_range",
+            ),
+            models.CheckConstraint(
+                condition=Q(estimated_fare__isnull=True) | Q(estimated_fare__gte=0),
+                name="trips_trip_estimated_fare_nonnegative_or_null",
+            ),
+            models.CheckConstraint(
+                condition=Q(depart_lat__gte=-90) & Q(depart_lat__lte=90),
+                name="trips_trip_depart_lat_range",
+            ),
+            models.CheckConstraint(
+                condition=Q(depart_lng__gte=-180) & Q(depart_lng__lte=180),
+                name="trips_trip_depart_lng_range",
+            ),
+            models.CheckConstraint(
+                condition=Q(arrive_lat__gte=-90) & Q(arrive_lat__lte=90),
+                name="trips_trip_arrive_lat_range",
+            ),
+            models.CheckConstraint(
+                condition=Q(arrive_lng__gte=-180) & Q(arrive_lng__lte=180),
+                name="trips_trip_arrive_lng_range",
+            ),
+        ]
+    
 
     def __str__(self):
         return f"{self.depart_name} -> {self.arrive_name} ({self.depart_time})"
