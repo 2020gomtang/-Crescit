@@ -16,9 +16,9 @@
         android:usesCleartextTraffic="true">
 
         <!-- 네이버 지도 Client ID -->
-        <!--meta-data
+        <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="95qc7sfzkj"/ -->
+            android:value="95qc7sfzkj"/>
 
         <activity
             android:name=".MainActivity"
