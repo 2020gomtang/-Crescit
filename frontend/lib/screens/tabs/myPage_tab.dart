@@ -4,7 +4,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../screens/auth/login_screen.dart';
+import '../auth/login_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../utils/colors.dart';
 
