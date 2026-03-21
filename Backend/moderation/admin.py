@@ -51,7 +51,8 @@ class ReportAdmin(admin.ModelAdmin):
         "reported_user__email",
         "reason",
     )
-    
+
+
 @admin.register(TrustScoreLog)
 class TrustScoreLogAdmin(admin.ModelAdmin):
     list_display = (
